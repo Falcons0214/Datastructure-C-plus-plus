@@ -86,8 +86,8 @@ private:
         node *grandParent = nParent->getParent();
 
         nParent->setRight(n->getLeft());
-        
-        if(n->getLeft())
+
+        if (n->getLeft())
             n->getLeft()->setParent(nParent);
 
         n->setLeft(nParent);
@@ -118,8 +118,8 @@ private:
         node *grandParent = nParent->getParent();
 
         nParent->setLeft(n->getRight());
-        
-        if(n->getRight()) 
+
+        if (n->getRight())
             n->getRight()->setParent(nParent);
 
         n->setRight(nParent);
@@ -167,7 +167,7 @@ private:
                     }
                     else
                     {
-                        L_rotation(temp->getRight()); 
+                        L_rotation(temp->getRight());
                         R_rotation(temp->getParent());
                     }
                     leaf = temp;
@@ -203,19 +203,21 @@ private:
             _print(cur->getRight());
         }
     }
-    node *_search(node *cur, int key) 
+    node *_search(node *cur, int key)
     {
-        if(cur->getKey() == key) {
+        if (cur->getKey() == key)
+        {
             return cur;
         }
         return cur->getKey() > key ? _search(cur->getLeft(), key) : _search(cur->getRight(), key);
     }
     node *searchMinNode(node *n)
     {
-        if( !n->getLeft() )
+        if (!n->getLeft())
             return n;
         return searchMinNode(n->getLeft());
     }
+
 public:
     AVL()
     {
@@ -264,39 +266,56 @@ public:
     {
         node *del = this->searchNode(k);
         node *replace = searchMinNode(del->getRight());
+        this->decrease();
 
-        if(replace->getParent() != del)
+        if (replace->getParent() != del)
         {
             replace->getParent()->setLeft(replace->getRight());
-            if(replace->getRight())
+            if (replace->getRight())
             {
                 replace->getRight()->setParent(replace->getParent());
             }
         }
 
-        if(del->getParent())
+        if (del->getParent())
         {
             replace->setParent(del->getParent());
-            if( del->getParent()->getLeft() == del ) {
+            if (del->getParent()->getLeft() == del)
+            {
                 del->getParent()->setLeft(replace);
-            }else{
+            }
+            else
+            {
                 del->getParent()->setRight(replace);
             }
-        }else{
+        }
+        else
+        {
             this->root = replace;
         }
 
         replace->setLeft(del->getLeft());
         replace->setRight(del->getRight());
-        if(replace->getLeft()) {
+        if (replace->getLeft())
+        {
             replace->getLeft()->setParent(replace);
         }
-        if(replace->getRight()) {
+        if (replace->getRight())
+        {
             replace->getRight()->setParent(replace);
         }
-        
+
         checkBalance(replace->getRight());
         return del;
+    }
+    void reBuild(node *unBalanceTree) // receive the unBalacnceTree root then balance it.
+    {
+        if (unBalanceTree)
+        {
+            reBuild(unBalanceTree->getLeft());
+            reBuild(unBalanceTree->getRight());
+            checkBalance(unBalanceTree);
+        }
     }
     void printTree()
     {
@@ -312,7 +331,6 @@ int main()
 {
     std::cout << "start"
               << "\n";
-
     AVL tree;
     int n = 12, arr[n] = {10, 5, 15, 14, 17, 4, 7, 18, 1, 6, 8, 9};
 
